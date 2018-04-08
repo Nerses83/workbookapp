@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,17 +36,6 @@ public class WorkPlace {
 
     @Column(name = "isCurrent")
     private boolean isCurrent;
-
-//    public int getWorkbook_id() {
-//        return workbook_id;
-//    }
-
-//    public void setWorkbook_id(int workbook_id) {
-//        this.workbook_id = workbook_id;
-//    }
-//
-//    @Column(name = "workbook_id")
-//    private int workbook_id;
 
     @ManyToOne
     @JoinColumn(name="workbook_id", nullable=false)
@@ -119,8 +109,23 @@ public class WorkPlace {
         this.isCurrent = isCurrent;
     }
 
-//    @Override
-//    public int compareTo(WorkPlace o) {
-//        return 0;
-//    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorkPlace workPlace = (WorkPlace) o;
+        return id == workPlace.id &&
+                isCurrent == workPlace.isCurrent &&
+                Objects.equals(company, workPlace.company) &&
+                Objects.equals(country, workPlace.country) &&
+                Objects.equals(startDate, workPlace.startDate) &&
+                Objects.equals(endDate, workPlace.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, company, country, startDate, endDate, isCurrent);
+    }
 }

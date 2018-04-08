@@ -2,6 +2,8 @@ package com.webbfontaine.workbookapp.service.impl;
 
 
 import com.webbfontaine.workbookapp.entity.WorkBook;
+import com.webbfontaine.workbookapp.exceptions.DatabaseException;
+import com.webbfontaine.workbookapp.exceptions.EntityNotFoundException;
 import com.webbfontaine.workbookapp.repository.WorkBookRepository;
 import com.webbfontaine.workbookapp.service.WorkBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +28,13 @@ public class WorkBookServiceImpl implements WorkBookService {
         this.workBookRepository = workBookRepository;
     }
 
-
-
-    //    @Autowired
-
-
     @Override
-    public void saveWorkBook(WorkBook workBook) {
-        workBookRepository.save(workBook);
-
+    public void saveWorkBook(WorkBook workBook) throws DatabaseException{
+        try {
+            workBookRepository.save(workBook);
+        } catch (Exception e){
+            throw new DatabaseException();
+        }
 
     }
 
@@ -49,8 +49,16 @@ public class WorkBookServiceImpl implements WorkBookService {
     }
 
     @Override
-    public void updateWorkBook(WorkBook workBook) {
-        workBookRepository.save(workBook);
+    public void updateWorkBook(WorkBook workBook) throws EntityNotFoundException, DatabaseException {
+        if (!workBookRepository.exists(workBook.getId())) {
+            throw new EntityNotFoundException();
+        }
+        try {
+            workBookRepository.save(workBook);
+        } catch (Exception e){
+            throw new DatabaseException();
+        }
+
     }
 
     @Override

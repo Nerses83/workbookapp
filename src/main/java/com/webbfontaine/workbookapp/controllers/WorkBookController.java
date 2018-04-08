@@ -2,6 +2,9 @@ package com.webbfontaine.workbookapp.controllers;
 
 
 import com.webbfontaine.workbookapp.entity.WorkBook;
+import com.webbfontaine.workbookapp.exceptions.DatabaseException;
+import com.webbfontaine.workbookapp.exceptions.EntityNotFoundException;
+import com.webbfontaine.workbookapp.exceptions.InternalServerException;
 import com.webbfontaine.workbookapp.exceptions.WorkBookNotFoundException;
 import com.webbfontaine.workbookapp.service.WorkBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +49,7 @@ public class WorkBookController {
 
     @PostMapping("/save")
     public String saveWorkBook(@RequestParam String firstName, @RequestParam String lastName, @RequestParam int age, @RequestParam String passportNumber,
-                               @RequestParam(value="dateOfBirth")     @DateTimeFormat(pattern="yyyy-MM-dd") Date dateOfBirth) throws NumberFormatException {
+                               @RequestParam(value="dateOfBirth")     @DateTimeFormat(pattern="yyyy-MM-dd") Date dateOfBirth) throws NumberFormatException, DatabaseException {
 
 
         WorkBook workBook = new WorkBook(firstName, lastName, dateOfBirth, age, passportNumber);
@@ -67,11 +70,15 @@ public class WorkBookController {
 
     @PostMapping("/update")
     public String updateWorkBook(@RequestParam Integer id, @RequestParam String firstName, @RequestParam String lastName, @RequestParam int age, @RequestParam String passportNumber,
-                                 @RequestParam(value="dateOfBirth")     @DateTimeFormat(pattern="yyyy-MM-dd") Date dateOfBirth) {
+                                 @RequestParam(value="dateOfBirth")     @DateTimeFormat(pattern="yyyy-MM-dd") Date dateOfBirth) throws InternalServerException {
         WorkBook workBook = new WorkBook(firstName, lastName, dateOfBirth, age, passportNumber);
 
         workBook.setId(id);
-        workBookService.updateWorkBook(workBook);
+        try {
+            workBookService.updateWorkBook(workBook);
+        } catch (EntityNotFoundException | DatabaseException e) {
+            throw new InternalServerException();
+        }
         return "redirect:/";
     }
 
