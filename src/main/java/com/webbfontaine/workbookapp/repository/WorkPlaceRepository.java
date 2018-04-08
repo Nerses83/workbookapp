@@ -14,19 +14,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 //@Repository
 public interface WorkPlaceRepository extends JpaRepository<WorkPlace, Integer> {
 
-//    @Modifying(clearAutomatically = true)
-//    @Query("UPDATE cu c SET c.address = :address WHERE c.id = :companyId")
-//    int updateAddress(@Param("companyId") int companyId, @Param("address") String address);
-
-//    @Modifying
-//    @Query("Update WorkPlace t SET t.current=:isCurrent WHERE t.id=:id")
-//    int updateIsCurrent(@Param("isCurrent") boolean isCurrent, @Param("id") Integer id);
-
-//
-//    @Transactional
-//    @Modifying
-//    @Query("UPDATE WorkPlace c SET c.current = :current WHERE c.workBook = :workBook")
-//    int updateCurrent(@Param("workBook") WorkBook workBook, @Param("current") boolean current);
-//
-
 }

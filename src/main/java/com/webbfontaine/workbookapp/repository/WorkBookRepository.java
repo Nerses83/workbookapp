@@ -22,8 +22,4 @@ public interface WorkBookRepository extends JpaRepository<WorkBook, Integer> {
 
 }
 
-//public interface NoteRepository extends JpaRepository<Note, Integer> {
-//
-//    List<Note> findAllByOrderByDateAsc();
-//    List<Note> findAllByOrderByDateDesc();
-//}
+
