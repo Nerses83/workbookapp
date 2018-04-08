@@ -3,6 +3,7 @@ package com.webbfontaine.workbookapp.controllers;
 
 import com.webbfontaine.workbookapp.entity.WorkBook;
 import com.webbfontaine.workbookapp.entity.WorkPlace;
+import com.webbfontaine.workbookapp.exceptions.WorkBookNotFoundException;
 import com.webbfontaine.workbookapp.exceptions.WorkPlaceNotFoundException;
 import com.webbfontaine.workbookapp.service.WorkBookService;
 import com.webbfontaine.workbookapp.service.WorkPlaceService;
@@ -10,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -27,9 +25,12 @@ public class WorkPlaceController {
     WorkBookService workBookService;
 
     @GetMapping("/workbook/{id}")
-    public String getWorkPlace(@PathVariable Integer id, Model model) {
+    public String getWorkPlace(@PathVariable Integer id, Model model) throws WorkBookNotFoundException {
 
         WorkBook workBook = workBookService.getWorkBookById(id);
+        if(workBook == null) {
+            throw  new WorkBookNotFoundException();
+        }
         model.addAttribute("workBook", workBook);
         return "workPlace";
     }
@@ -52,18 +53,8 @@ public class WorkPlaceController {
         if(endDate == null) endDate = new Date();
 
         WorkBook workBook = workBookService.getWorkBookById(id);
-//        if(current) {
-//            for (WorkPlace workPlace : workBook.getWorkPlaces()) {
-//                if(workPlace.isCurrent()) {
-//                    workPlace.setCurrent(false);
-//                    workPlaceService.saveWorkPlace(workPlace);
-//                    break;
-//                }
-//            }
-//        }
         WorkPlace workPlace = new WorkPlace(company, country, startDate, endDate, current);
         workPlace.setWorkBook(workBook);
-//        workPlaceService.saveWorkPlace(workPlace);
         workPlaceService.updateWorkPlace(workBook.getWorkPlaces(), workPlace);
         return String.format("redirect:/workbook/%s", id);
     }
@@ -107,8 +98,15 @@ public class WorkPlaceController {
         return String.format("redirect:/workbook/%s", book_id);
     }
 
-//    @ExceptionHandler(WorkPlaceNotFoundException.class)
-//    public void handleMaxAllowedTablesAssignedException() {
-////        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler(WorkPlaceNotFoundException.class)
+    public @ResponseBody
+    String handleWorkPlaceNotFoundException() {
+        return "Work Place Not Found";
+    }
+
+    @ExceptionHandler(WorkBookNotFoundException.class)
+    public @ResponseBody
+    String handleWorkBookNotFoundException() {
+        return "Work Book Not Found";
+    }
 }
