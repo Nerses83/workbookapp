@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<body>
+<div class="container">
+    <div th:replace="fragments/header :: header"></div>
+    <div class="container">
+        <table class="table table-bordered table-hover horizontal-align">
+
+            <tr>
+                <th th:text="${workPlace.workBook.firstName}" style="width: 20%"></th>
+                <th th:text="${workPlace.workBook.lastName}" style="width: 20%"></th>
+                <th th:text="${#dates.format(workPlace.workBook.dateOfBirth, 'yyyy-MM-dd')}" style="width: 20%"></th>
+                <th th:text="${workPlace.workBook.age}" style="width: 20%"></th>
+                <th th:text="${workPlace.workBook.passportNumber}" style="width: 20%"></th>
+            </tr>
+
+        </table>
+
+        <form class="form-horizontal" th:object="${workPlace}" th:action="@{/workplace/update}" name="edit_form" id="edit_form"
+              method="post" role="form">
+            <div class="form-group">
+                <input type="hidden" id="id" th:name="id" th:value="*{id}"/>
+            </div>
+            <div class="form-group">
+                <input type="hidden" id="book_id" th:name="book_id" th:value="*{workBook.id}"/>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="company" th:name="company" th:value="*{company}" maxlength="100"/>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="country" th:name="country" th:value="*{country}" maxlength="100"/>
+            </div>
+            <div class="form-group">
+                <input type="date" class="form-control" id="startDate" th:name="startDate" th:value="*{#dates.format(startDate, 'yyyy-MM-dd')}" maxlength="100"/>
+            </div>
+            <div class="form-group">
+                <input type="date" class="form-control" id="endDate" th:name="endDate" th:value="*{#dates.format(endDate, 'yyyy-MM-dd')}" maxlength="100"/>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="current" th:name="current" th:checked="*{current}" />
+                <label class="form-check-label" for="done">
+                    Current?
+                </label>
+            </div>
+            <!--<div class="form-check">-->
+                <!--<input class="form-check-input" type="checkbox" id="current" th:name="current" />-->
+                <!--<label class="form-check-label" for="done">-->
+                    <!--Current?-->
+                <!--</label>-->
+            <!--</div>-->
+
+
+
+
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
